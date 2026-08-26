@@ -1,0 +1,21 @@
+# ESP-IDF Build Artifacts
+build/
+
+# Configuration Backups
+sdkconfig.old
+sdkconfig.defaults.old
+
+# Python Compile Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local IDE Settings (Contains machine-specific toolchain paths)
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
