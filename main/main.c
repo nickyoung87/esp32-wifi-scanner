@@ -24,48 +24,23 @@ int app_main(void) {
 
     // Setup default wifi config
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
-    if (esp_wifi_init(&cfg) != ESP_OK) {
-        printf("WIFI init failed.\n");
-        return 1;
-    }
+    ESP_ERROR_CHECK(esp_wifi_init(&cfg));
 
     // Set the wifi mode before we turn it on
-    if (esp_wifi_set_mode(WIFI_MODE_STA) != ESP_OK) {
-        printf("Error setting wifi mode\n");
-        return 1;
-    }
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
 
     // Start the wifi
-    if (esp_wifi_start() != ESP_OK) {
-        printf("Error starting wifi\n");
-        return 1;
-    }
+    ESP_ERROR_CHECK(esp_wifi_start());
 
     // Start the scan for APs
     esp_err_t scan_start = esp_wifi_scan_start(NULL, 1);
     if (scan_start != ESP_OK) {
-        switch(scan_start) {
-            case ESP_ERR_WIFI_NOT_INIT:
-                printf("Wifi not initialized\n");
-                break;
-            case ESP_ERR_WIFI_NOT_STARTED:
-                printf("Wifi not started\n");
-                break;
-            case ESP_ERR_WIFI_TIMEOUT:
-                printf("Wifi timeout\n");
-                break;
-            case ESP_ERR_WIFI_STATE:
-                printf("Wifi still connecting\n");
-                break;
-            default:
-                printf("Some other error occurred\n");
-                printf("%s\n", esp_err_to_name(scan_start));
-        }
+        printf("%s\n", esp_err_to_name(scan_start));
         return 1;
     }
 
     // Get number of APs and print it
-    uint16_t number_of_aps = 0;
+    uint16_t number_of_aps;
     if (esp_wifi_scan_get_ap_num(&number_of_aps) != ESP_OK) {
         printf("An error getting AP count\n");
         return 1;
