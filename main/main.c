@@ -7,6 +7,8 @@
 
 #define DEFAULT_MAX_SCAN_APS 5
 
+char *convert_signal_strength(int8_t s);
+
 int app_main(void) {
 
     // Setup the NVS flash and re-flash if necessary
@@ -83,12 +85,10 @@ int app_main(void) {
         return 1;
     }
 
-    //printf("SSID           | Signal Strength | Channel | MAC\n");
-    printf("%-20s %-8s %-7s %-17s\n", "SSID", "Strength", "Channel" , "MAC");
+    printf("%-20s %-10s %-7s %-17s\n", "SSID", "Strength", "Channel" , "MAC");
     printf("----------------------------------------------------\n");
     for (int i = 0; i < number_of_aps; i++) {
-        //printf("%s           | %i | %i | ", ap_records[i].ssid, ap_records[i].rssi, ap_records[i].primary);
-        printf("%-20s %-8i %-7i ", ap_records[i].ssid, ap_records[i].rssi, ap_records[i].primary);
+        printf("%-20s %-10s %-7i ", ap_records[i].ssid, convert_signal_strength(ap_records[i].rssi), ap_records[i].primary);
         for (int j = 0; j < 6; j++) {
             printf("%02X", ap_records[i].bssid[j]);
             if (j != 5) {
@@ -106,5 +106,19 @@ int app_main(void) {
 
     while(1) {
         vTaskDelay(1000 / portTICK_PERIOD_MS);
+    }
+}
+
+char *convert_signal_strength(int8_t s) {
+    if (s >= -50) {
+        return "Excellent";
+    } else if (s < -50 && s >= -60) {
+        return "Good";
+    } else if (s < -60 && s >= -70) {
+        return "Fair";
+    } else if (s < -70 && s >= -80) {
+        return "Weak";
+    } else {
+        return "Very Weak";
     }
 }
